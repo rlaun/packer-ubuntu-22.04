@@ -1,0 +1,47 @@
+{
+  "variables": {
+    "is_headless": "false",
+    "user_name" : "ubuntu",
+    "user_pass" : "ubuntu"
+  },
+  "builders": [
+    {
+      "type" : "qemu",
+      "iso_urls": [
+        "ubuntu-22.04-beta-live-server-amd64.iso",
+        "https://releases.ubuntu.com/22.04/ubuntu-22.04-beta-live-server-amd64.iso"
+      ],
+      "iso_checksum": "sha256:39fdd5f7e868ab7981b492a8887dbaec85acf798b209162a37893cb4b209a26b",
+      "headless": "{{ user `is_headless` }}",
+      "boot_key_interval" : "50ms",
+      "boot_wait": "5s",
+      "http_directory": "http",
+      "disk_size": "5000M",
+      "memory": 2048, 
+      "format": "qcow2",
+      "display": "sdl",
+      "accelerator": "kvm",
+      "vm_name": "ubuntu-22.04-packer.img",
+      "net_device": "virtio-net",
+      "disk_interface": "virtio",
+      "boot_command": [
+        "e<wait>",
+        "<down><down><down>",
+        "<end><bs><bs><bs><bs><wait>",
+        "autoinstall ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ---<wait>",
+        "<f10><wait>"
+      ],
+      "ssh_username": "{{ user `user_name` }}",
+      "ssh_password": "{{ user `user_pass` }}",
+      "ssh_timeout": "60m",
+      "ssh_handshake_attempts": 420
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo '{{ user `user_name` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "scripts/cleanup.sh"
+    }
+  ]
+}
