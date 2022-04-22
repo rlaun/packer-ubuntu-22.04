@@ -87,5 +87,13 @@
       "execute_command": "echo '{{ user `user_pass` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "script": "scripts/cleanup.sh"
     }
+  ],
+  "post-processors": [
+    [
+      {
+        "output": "builds/{{.Provider}}-ubuntu2204.box",
+        "type": "vagrant"
+      }
+    ]
   ]
 }
