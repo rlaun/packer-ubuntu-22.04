@@ -1,5 +1,5 @@
 
-# Build Ubuntu 22.04 (Beta) with Packer
+# Build Ubuntu 22.04 with Packer
 
 This project demonstrates usage of Packer with the new [Ubuntu autoinstaller](https://ubuntu.com/server/docs/install/autoinstall) which was introduced in Ubuntu 20.04 while the classic Debian Installer (d-i) using `preseed.conf` files has been deprecated.
 
@@ -45,7 +45,7 @@ Display `gtk` doesn't work on my system, YMMV.
 
 
 
-## License 
+## License
 
 MIT
 
