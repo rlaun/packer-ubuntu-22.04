@@ -8,16 +8,16 @@
     {
       "type" : "qemu",
       "iso_urls": [
-        "ubuntu-22.04-beta-live-server-amd64.iso",
-        "https://releases.ubuntu.com/22.04/ubuntu-22.04-beta-live-server-amd64.iso"
+        "ubuntu-22.04-live-server-amd64.iso",
+        "https://releases.ubuntu.com/22.04/ubuntu-22.04-live-server-amd64.iso"
       ],
-      "iso_checksum": "sha256:39fdd5f7e868ab7981b492a8887dbaec85acf798b209162a37893cb4b209a26b",
+      "iso_checksum": "sha256:84aeaf7823c8c61baa0ae862d0a06b03409394800000b3235854a6b38eb4856f",
       "headless": "{{ user `is_headless` }}",
       "boot_key_interval" : "50ms",
       "boot_wait": "5s",
       "http_directory": "http",
       "disk_size": "5000M",
-      "memory": 2048, 
+      "memory": 2048,
       "format": "qcow2",
       "display": "sdl",
       "accelerator": "kvm",
@@ -35,13 +35,65 @@
       "ssh_password": "{{ user `user_pass` }}",
       "ssh_timeout": "60m",
       "ssh_handshake_attempts": 420
+    },
+    {
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "e<wait>",
+        "<down><down><down>",
+        "<end><bs><bs><bs><bs><wait>",
+        "autoinstall ds=nocloud-net\\;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ---<wait>",
+        "<f10><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 81920,
+      "guest_os_type": "Ubuntu_64",
+      "headless": "{{ user `is_headless` }}",
+      "http_directory": "http",
+      "iso_urls": [
+        "ubuntu-22.04-live-server-amd64.iso",
+        "https://releases.ubuntu.com/22.04/ubuntu-22.04-live-server-amd64.iso"
+      ],
+      "iso_checksum": "sha256:84aeaf7823c8c61baa0ae862d0a06b03409394800000b3235854a6b38eb4856f",
+      "ssh_username": "{{ user `user_name` }}",
+      "ssh_password": "{{ user `user_pass` }}",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "1800s",
+      "ssh_timeout": "60m",
+      "ssh_handshake_attempts": 420,
+      "shutdown_command": "echo '{{ user `user_pass` }}' |sudo -S shutdown -P now",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vm_name": "packer-ubuntu-22.04-amd64",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "1024"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "1"
+        ]
+      ]
     }
   ],
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "echo '{{ user `user_name` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo '{{ user `user_pass` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "script": "scripts/cleanup.sh"
     }
+  ],
+  "post-processors": [
+    [
+      {
+        "output": "builds/{{.Provider}}-ubuntu2204.box",
+        "type": "vagrant"
+      }
+    ]
   ]
 }
