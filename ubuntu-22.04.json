@@ -8,10 +8,10 @@
     {
       "type" : "qemu",
       "iso_urls": [
-        "ubuntu-22.04-beta-live-server-amd64.iso",
-        "https://releases.ubuntu.com/22.04/ubuntu-22.04-beta-live-server-amd64.iso"
+        "ubuntu-22.04.5-live-server-amd64.iso",
+        "https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso"
       ],
-      "iso_checksum": "sha256:39fdd5f7e868ab7981b492a8887dbaec85acf798b209162a37893cb4b209a26b",
+      "iso_checksum": "sha256:9bc6028870aef3f74f4e16b900008179e78b130e6b0b9a140635434a46aa98b0",
       "headless": "{{ user `is_headless` }}",
       "boot_key_interval" : "50ms",
       "boot_wait": "5s",
